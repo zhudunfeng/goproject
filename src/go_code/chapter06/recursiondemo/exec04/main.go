@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+//猴子吃桃
 func peach(n int) int {
 
 	if n < 1 || n > 10 {
