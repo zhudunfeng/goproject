@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	//起别名
-	// util "go_code/chapter06/packagedemo/utils"
 	"go_code/chapter06/packagedemo/utils"
 )
 
