@@ -1,0 +1,94 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"reflect"
+)
+
+//定义一个Monster结构体
+type Monster struct {
+	Name  string  `json:"name"`
+	Age   int     `json:"age"`
+	Score float32 `json:"score"`
+	Sex   string
+}
+
+//方法 显示
+func (s Monster) Print() {
+	fmt.Println("-------start------")
+	fmt.Println(s)
+	fmt.Println("--------end-------")
+}
+
+//方法 返回两个数的和
+func (s Monster) GetSum(n1, n2 int) int {
+	return n1 + n2
+}
+
+//方法  接收四个参数，给s赋值
+func (s Monster) Set(name string, age int, score float32, sex string) {
+	s.Name = name
+	s.Age = age
+	s.Score = score
+	s.Sex = sex
+}
+
+func TestStruct(a interface{}) {
+	//获取reflect.Type类型
+	typ := reflect.TypeOf(a)
+	//获取reflect.Value类型
+	val := reflect.ValueOf(a)
+	//获取到a对应的类别
+	kd := val.Kind()
+
+	//如果传入的不是struct,就退出
+	if kd != reflect.Ptr && val.Elem().Kind() == reflect.Struct {
+		fmt.Println("expect struct")
+		return
+	}
+
+	//获取到该结构体有几个字段[传入为指针，需要Elem获取指针指向的具体结构体对象]
+	num := val.Elem().NumField()
+	val.Elem().Field(0).SetString("白象精")
+
+	fmt.Printf("struct has %d field\n", num)
+	//遍历结构体的所有字段
+	for i := 0; i < num; i++ {
+		fmt.Printf("Field %d: 值为=%v\n", i, val.Elem().Field(i))
+		//获取到struct标签，注意需要通过reflect.Type来获取tag标签的值
+		tagVal := typ.Elem().Field(i).Tag.Get("json")
+		if tagVal != "" {
+			fmt.Printf("Field %d: tag为=%v\n", i, tagVal)
+		}
+	}
+
+	//获取该结构体有多少方法
+	numOfMethod := val.NumMethod()
+	fmt.Printf("struct has %d method\n", numOfMethod)
+
+	//var params []reflect.Value
+	//方法的排序默认是按照 函数名的排序（ASCII码）
+	val.Method(1).Call(nil) //获取到第二个方法，调用它
+
+	//调用结构体的第一个方法Method(0)
+	var params []reflect.Value //声明[]reflect.Value
+	params = append(params, reflect.ValueOf(10))
+	params = append(params, reflect.ValueOf(40))
+	res := val.Method(0).Call(params) //传入给参数是 []reflect.Value
+	fmt.Println("res=", res[0].Int()) //返回结果，返回的结果是[]reflect.Value
+}
+
+func main() {
+	//创建一个Monster实例
+	var monster Monster = Monster{
+		Name:  "张三",
+		Age:   400,
+		Score: 30.8,
+	}
+	//先说明一下，Marshal就是通过反射获取到struct的tag
+	result, _ := json.Marshal(monster)
+	fmt.Println("json result: ", string(result))
+	//将Monster实例传递给TestStruct()
+	TestStruct(&monster)
+}

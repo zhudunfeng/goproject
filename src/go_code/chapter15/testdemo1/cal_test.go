@@ -15,8 +15,3 @@ func TestAddUpper(t *testing.T) {
 	}
 	t.Logf("AddUpper(10)执行正确...")
 }
-
-func TestHello(t *testing.T) {
-	//调用
-	Hello()
-}

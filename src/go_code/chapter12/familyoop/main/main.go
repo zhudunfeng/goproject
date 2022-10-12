@@ -1,6 +1,8 @@
 package main
 
-import "go_code/chapter12/familyoop/utils"
+import (
+	"go_code/chapter12/familyoop/utils"
+)
 
 func main() {
 	familyAccount := utils.NewFamilyAccount()
