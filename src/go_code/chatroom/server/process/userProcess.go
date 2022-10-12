@@ -1,4 +1,4 @@
-package process
+package process2
 
 import (
 	"encoding/json"
@@ -16,7 +16,7 @@ type UserProcess struct {
 }
 
 //编写一个serverProcessLogin函数，专门处理登录请求
-func (this *UserProcess) serverProcessLogin(mes *message.Message) (err error) {
+func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	//核心代码
 	//1. 先从mes 中取出 mes.Data,并直接反序列化成LoginMes
 	var loginMes message.LoginMes

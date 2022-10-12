@@ -1,14 +1,9 @@
 package main
 
 import (
-	"encoding/binary"
-	"encoding/json"
 	"fmt"
-	"go_code/chatroom/common/message"
-	"io"
 	"net"
 )
-
 
 // //写包
 // //先发送数据包长度
@@ -133,34 +128,18 @@ import (
 func process(conn net.Conn) {
 	//这里需要延时关闭 conn
 	defer conn.Close()
-
-	//循环的客户端发送的信息
-	for {
-		//这里我们将读取数据包，直接封装成一个函数readPkg(),返回Message,Err
-		mes, err := readPkg(conn)
-		if err != nil {
-			if err == io.EOF {
-				fmt.Printf("客户端%v已断开\n", conn.RemoteAddr())
-				return
-			} else {
-				fmt.Println("readPkg err=", err)
-				//停掉当前协程
-				fmt.Printf("客户端%v已断开\n", conn.RemoteAddr())
-				return
-			}
-		}
-		// fmt.Println("mes = ", mes)
-		//消息总控制器
-		err = serverProcessMes(conn, &mes)
-		if err != nil {
-			return
-		}
+	processor := &Processor{
+		Conn: conn,
+	}
+	err := processor.process2()
+	if err != nil {
+		fmt.Println("客户端和服务器通讯协程错误 error: ", err)
 	}
 }
 
 func main() {
 	//提示信息
-	fmt.Println("服务器再8889端口监听......")
+	fmt.Println("服务器[优化后]在8889端口监听......")
 	listen, err := net.Listen("tcp", "0.0.0.0:8889")
 	if err != nil {
 		fmt.Println("net.Listen error: ", err)

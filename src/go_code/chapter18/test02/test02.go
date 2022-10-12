@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	_ "testing"
 	"time"
@@ -22,8 +23,23 @@ func Test01() {
 	fmt.Println(data.(string))
 }
 
-func main(){
+func main() {
 	go Test01()
+	tmap := make(map[int]map[string][]int)
+	tmap[0] = make(map[string][]int)
+	tmap[0]["arr"] = make([]int,3)
+	tmap[0]["arr"][0] = 1
+	tmap[0]["arr"][1] = 2
+	tmap[0]["arr"][2] = 3
 
-	time.Sleep(time.Second*3)
+	data, _ := json.Marshal(tmap)
+	jsonStr := string(data)
+	fmt.Println(jsonStr)
+	// `{
+	// 	1:{
+	// 		"arr":[1,2,3]
+	// 	}
+	// }`
+
+	time.Sleep(time.Second * 3)
 }
