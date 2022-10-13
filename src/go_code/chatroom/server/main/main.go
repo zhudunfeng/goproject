@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"go_code/chatroom/server/model"
 	"net"
+	"time"
 )
 
 // //写包
@@ -135,6 +137,20 @@ func process(conn net.Conn) {
 	if err != nil {
 		fmt.Println("客户端和服务器通讯协程错误 error: ", err)
 	}
+}
+
+func init() {
+	//当服务器启动时，我们就去初始化我们的redis的连接池
+	initPool("127.0.0.1:6379", 16, 0, 300*time.Second)
+	initUserDao()
+}
+
+//这里我们编写一个函数，完成对UserDao的初始化任务
+func initUserDao() {
+	//这里的pool本身就是一个全局的变量
+	//这里需要注意一个初始化顺序问题
+	//initPool ,在 initUserDao
+	model.MyUserDao = model.NewUserDao(pool)
 }
 
 func main() {
