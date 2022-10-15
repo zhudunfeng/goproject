@@ -176,6 +176,12 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 				continue
 			}
 			fmt.Println("用户id:\t", v)
+			//完成 客户端的onlineUsers 初始化
+			user := &message.User{
+				UserId:     userId,
+				UserStatus: message.UserOnline,
+			}
+			onlineUsers[v] = user
 		}
 		fmt.Print("\n\n")
 		//可以显示当前在线用户列表，遍历loginResMes.UsersId

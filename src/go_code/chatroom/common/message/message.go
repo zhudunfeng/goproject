@@ -1,10 +1,18 @@
 package message
 
 const (
-	LoginMesType       = "loginMes"
-	LoginResMesType    = "loginResMes"
-	RegisterMesType    = "registerMes"
-	RegisterResMesType = "registerResMes"
+	LoginMesType            = "loginMes"
+	LoginResMesType         = "loginResMes"
+	RegisterMesType         = "registerMes"
+	RegisterResMesType      = "registerResMes"
+	NotifyUserStatusMesType = "NotifyUserStatus"
+)
+
+//这里我们定义几个用户状态的常量
+const (
+	UserOnline = iota
+	UserOffline
+	UserBusyStatus
 )
 
 type Message struct {
@@ -35,4 +43,10 @@ type RegisterMes struct {
 type RegisterResMes struct {
 	Code  int    `json:"code"`  //返回状态码 400 表示该用户已经占有  200表示注册成功
 	Error string `json:"error"` //返回错误信息
+}
+
+//为了配合服务器推送用户状态变化的消息
+type NotifyUserStatusMes struct {
+	UserId int `json:"userId"` //用户id
+	Status int `json:"status"` //用户的状态
 }
