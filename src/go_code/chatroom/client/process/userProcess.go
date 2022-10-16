@@ -169,6 +169,11 @@ func (this *UserProcess) Login(userId int, userPwd string) (err error) {
 
 	if loginResMes.Code == 200 {
 		// fmt.Println("登录成功")
+		//初始化
+		CurUser.Conn = conn
+		CurUser.UserId = userId
+		CurUser.UserStatus = message.UserOnline
+
 		fmt.Println("当前在线用户列表如下:")
 		for _, v := range loginResMes.UsersId {
 			//如果我们要求不显示自己在线，下面我们增加一个代码
