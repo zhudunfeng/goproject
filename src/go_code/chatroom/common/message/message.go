@@ -7,6 +7,7 @@ const (
 	RegisterResMesType      = "registerResMes"
 	NotifyUserStatusMesType = "NotifyUserStatus"
 	SmsMesType              = "SmsMes"
+	SmsPointToPointMesType  = "SmsPointToPointMes"
 )
 
 //这里我们定义几个用户状态的常量
@@ -59,3 +60,10 @@ type SmsMes struct {
 }
 
 //SmsResMes
+
+//点对点消息  SmsPointToPointMes
+type SmsPointToPointMes struct {
+	Content    string `json:"content"`    //内容
+	SourceUser User   `json:"sourceUser"` //发送者
+	TargetUser User   `json:"targetUser"` //接收者
+}

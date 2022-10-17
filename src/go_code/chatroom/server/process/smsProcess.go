@@ -11,8 +11,35 @@ import (
 type SmsProcess struct {
 }
 
+//点对点消息
+func (this *SmsProcess) SendPointToPointMes(mes *message.Message) {
+	var smsPointToPointMes message.SmsPointToPointMes
+	err := json.Unmarshal([]byte(mes.Data), &smsPointToPointMes)
+	if err != nil {
+		fmt.Println("json.Unmarshal error:", err)
+		return
+	}
+
+	data, err := json.Marshal(mes)
+	if err != nil {
+		fmt.Println("json.Marshal error:", err)
+	}
+
+	for id, up := range userMgr.onlineUsers {
+		//这里，转发给目标用户
+		if id == smsPointToPointMes.TargetUser.UserId {
+			this.sendMesEachOnlineUser(data, up.Conn)
+			break
+		}
+	}
+}
+
 //写方法转发消息
 func (this *SmsProcess) SendGroupMes(mes *message.Message) {
+	//遍历服务器端的onlineUsers map[int]*UserProcess
+	//将消息转发取出
+
+	//取出mes的内容 SmsMes
 	var smsMes message.SmsMes
 	err := json.Unmarshal([]byte(mes.Data), &smsMes)
 	if err != nil {

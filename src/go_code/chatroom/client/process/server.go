@@ -29,9 +29,7 @@ func ShowMenu() {
 		outputOnlineUsers()
 	case 2:
 		// fmt.Println("发送消息")
-		fmt.Println("你想对大家说什么:)")
-		fmt.Scanf("%s\n", &content)
-		smsProcess.SendGroupMes(content)
+		SelectSendType(content, smsProcess)
 	case 3:
 		fmt.Println("信息列表")
 	case 4:
@@ -39,6 +37,33 @@ func ShowMenu() {
 		os.Exit(0)
 	default:
 		fmt.Println("你输入的选项不正确")
+	}
+}
+
+func SelectSendType(content string, smsProcess *SmsProcess) {
+	var key int
+	fmt.Println("请选择发送类型(1群发,2点对点):")
+	fmt.Scanf("%d\n", &key)
+aa:
+	for {
+		switch key {
+		case 1:
+			fmt.Println("你想对大家说什么:)")
+			fmt.Scanf("%s\n", &content)
+			smsProcess.SendGroupMes(content)
+			break aa
+		case 2:
+			var userId int
+			fmt.Println("请输入目标用户的id:")
+			fmt.Scanf("%d\n", &userId)
+			fmt.Printf("你想对XXX说什么:)\n")
+			fmt.Scanf("%s\n", &content)
+			targetUser := &message.User{
+				UserId: userId,
+			}
+			smsProcess.SendPointToPointMes(content, targetUser)
+			break aa
+		}
 	}
 }
 
@@ -68,6 +93,8 @@ func serverProcessMes(conn net.Conn) {
 			//处理
 		case message.SmsMesType: //有人群发消息
 			outputGroupMes(&mes)
+		case message.SmsPointToPointMesType: //点对点转发
+			outputPointToPointMes(&mes)
 		default:
 			fmt.Println("服务器返回了未知的消息类型")
 		}

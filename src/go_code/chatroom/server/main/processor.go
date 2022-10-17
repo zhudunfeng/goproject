@@ -62,6 +62,12 @@ func (this *Processor) serverProcessMes(mes *message.Message) (err error) {
 		//创建一个SmsProcess实例完成转发群聊消息
 		smsProcess := &process2.SmsProcess{}
 		smsProcess.SendGroupMes(mes)
+	case message.SmsPointToPointMesType:
+		//创建一个SmsProcess实例完成转发点对点消息
+		fmt.Println("11111111")
+		fmt.Println(mes)
+		smsProcess := &process2.SmsProcess{}
+		smsProcess.SendPointToPointMes(mes)
 	default:
 		fmt.Println("消息类型不存在，无法处理......")
 	}
