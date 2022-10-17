@@ -13,6 +13,48 @@ import (
 type UserProcess struct {
 }
 
+//用户登出
+func (this *UserProcess) Logout(userId int,conn net.Conn) (err error) {
+	//2.准备通过conn发送消息给服务
+	var mes message.Message
+	mes.Type = message.LogoutMesType
+	//3.创建一个LogoutMes结构体
+	var logoutMes message.LogoutMes
+	logoutMes.UserId = userId
+
+	//4.将LogoutMes 序列化
+	data, err := json.Marshal(logoutMes)
+	if err != nil {
+		fmt.Println("json.Marshal error:", err)
+		return
+	}
+
+	//5.把data赋给 mes.Data字段
+	mes.Data = string(data)
+
+	//6.将mes进行序列化
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("json.Marshal error:", err)
+		return
+	}
+
+	//创建一个tranfer
+	tf := &utils.Transfer{
+		Conn: conn,
+	}
+
+	//发送data给服务器端
+	err = tf.WritePkg(data)
+
+	if err != nil {
+		fmt.Println("注册发送消息错误 error:", err)
+		return
+	}
+
+	return
+}
+
 func (this *UserProcess) Register(userId int, userPwd string, userName string) (err error) {
 
 	//1.链接到服务器

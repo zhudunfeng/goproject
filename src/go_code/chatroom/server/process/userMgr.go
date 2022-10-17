@@ -10,13 +10,17 @@ var (
 )
 
 type UserMgr struct {
+	//在线用户
 	onlineUsers map[int]*UserProcess
+	//离线用户id列表
+	offlineUsers []int
 }
 
 //完成对userMgr的初始化工作
 func init() {
 	userMgr = &UserMgr{
-		onlineUsers: make(map[int]*UserProcess, 1024),
+		onlineUsers:  make(map[int]*UserProcess, 1024),
+		offlineUsers: make([]int, 0),
 	}
 }
 

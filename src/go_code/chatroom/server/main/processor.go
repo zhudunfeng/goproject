@@ -68,6 +68,13 @@ func (this *Processor) serverProcessMes(mes *message.Message) (err error) {
 		fmt.Println(mes)
 		smsProcess := &process2.SmsProcess{}
 		smsProcess.SendPointToPointMes(mes)
+	case message.LogoutMesType:
+		//处理用户登出
+		fmt.Println("22222222222222")
+		up := &process2.UserProcess{
+			Conn: this.Conn,
+		}
+		err = up.ServerProcessLogout(mes)
 	default:
 		fmt.Println("消息类型不存在，无法处理......")
 	}

@@ -209,3 +209,31 @@ func (this *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	err = tf.WritePkg(data)
 	return
 }
+
+//用户登出
+func (this *UserProcess) ServerProcessLogout(mes *message.Message) (err error) {
+	var logoutMes message.LogoutMes
+	err = json.Unmarshal([]byte(mes.Data), &logoutMes)
+	if err != nil {
+		fmt.Println("json.Unmarshal error:", err)
+		return
+	}
+	delete(userMgr.onlineUsers, logoutMes.UserId)
+	fmt.Println(userMgr.onlineUsers)
+
+	data, err := json.Marshal(mes)
+	if err != nil {
+		fmt.Println("json.Marshal error:", err)
+	}
+
+	for id, up := range userMgr.onlineUsers {
+		//这里，还需要过滤自己，即不要再发给自己
+		if id == logoutMes.UserId {
+			continue
+		}
+		smsProccess := &SmsProcess{}
+		smsProccess.sendMesEachOnlineUser(data, up.Conn)
+	}
+
+	return
+}

@@ -8,6 +8,7 @@ const (
 	NotifyUserStatusMesType = "NotifyUserStatus"
 	SmsMesType              = "SmsMes"
 	SmsPointToPointMesType  = "SmsPointToPointMes"
+	LogoutMesType           = "LogoutMes"
 )
 
 //这里我们定义几个用户状态的常量
@@ -66,4 +67,9 @@ type SmsPointToPointMes struct {
 	Content    string `json:"content"`    //内容
 	SourceUser User   `json:"sourceUser"` //发送者
 	TargetUser User   `json:"targetUser"` //接收者
+}
+
+//当前用户退出消息
+type LogoutMes struct {
+	User
 }

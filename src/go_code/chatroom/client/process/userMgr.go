@@ -1,6 +1,7 @@
 package process
 
 import (
+	"encoding/json"
 	"fmt"
 	"go_code/chatroom/client/model"
 	"go_code/chatroom/common/message"
@@ -17,6 +18,23 @@ func outputOnlineUsers() {
 	for id, _ := range onlineUsers {
 		fmt.Println("用户id:\t", id)
 	}
+}
+
+func outputLogoutUsers(mes *message.Message) { //接收用户登出消息
+	//显示即可
+	//1.反序列化mes.Data
+	var logoutMes message.LogoutMes
+	err := json.Unmarshal([]byte(mes.Data), &logoutMes)
+	if err != nil {
+		fmt.Println("json.Unmarshal error:", err.Error())
+		return
+	}
+
+
+	delete(onlineUsers,logoutMes.UserId)
+	
+	//打印当前在线用户
+	outputOnlineUsers()
 }
 
 //编写一个方法，处理返回的NotifyUserStatusMes

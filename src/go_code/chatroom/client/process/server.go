@@ -34,6 +34,10 @@ func ShowMenu() {
 		fmt.Println("信息列表")
 	case 4:
 		fmt.Println("你选择退出了系统...")
+		//删除server在线列表中的当前用户
+		up := &UserProcess{}
+		up.Logout(CurUser.UserId, CurUser.Conn)
+		// time.Sleep(time.Second * 2)
 		os.Exit(0)
 	default:
 		fmt.Println("你输入的选项不正确")
@@ -95,6 +99,8 @@ func serverProcessMes(conn net.Conn) {
 			outputGroupMes(&mes)
 		case message.SmsPointToPointMesType: //点对点转发
 			outputPointToPointMes(&mes)
+		case message.LogoutMesType: //有人登出
+			outputLogoutUsers(&mes)
 		default:
 			fmt.Println("服务器返回了未知的消息类型")
 		}
